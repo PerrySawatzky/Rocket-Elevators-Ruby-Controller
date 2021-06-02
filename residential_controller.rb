@@ -28,11 +28,12 @@ class Column
         bestElevator = nil
         bestFloorGap = 10000
         #cycles through elevatorsList and finds the best elevator
-        (0...elevatorsList.size).each do |i|
-            currentFloorGap = (elevatorsList[i].currentFloor - _requestedFloor).abs
-            elevatorMovingStatus = elevatorsList[i].status
-            elevatorDirection = elevatorsList[i].direction
-            elevatorCurrentFloor = elevatorsList[i].currentFloor
+        #(0...elevatorsList.size).each do |i|
+        elevatorsList.each do |current_elevator|       
+            currentFloorGap = (current_elevator.currentFloor - _requestedFloor).abs
+            elevatorMovingStatus = current_elevator.status
+            elevatorDirection = current_elevator.direction
+            elevatorCurrentFloor = current_elevator.currentFloor
             #Elevator moving in the opposite direction, dont want it.
             if(elevatorMovingStatus != 'idle' && _direction != elevatorDirection)
                 currentFloorGap = 10000
@@ -40,17 +41,17 @@ class Column
             #The elevator is above the user. It is going up and so is the user.
             if(_direction == elevatorDirection && elevatorDirection == "down" && _requestedFloor < elevatorCurrentFloor)
                 bestFloorGap = currentFloorGap
-                bestElevator = elevatorsList[i]
+                bestElevator = current_elevator
             end
             #The elevator is below the user. It is coming down and so is the user.
             if(_direction == elevatorDirection && elevatorDirection == "up" && _requestedFloor > elevatorCurrentFloor)
                 bestFloorGap = currentFloorGap
-                bestElevator = elevatorsList[i]
+                bestElevator = current_elevator
             end
             #The elevator is idle and close to user.
             if(currentFloorGap < bestFloorGap && elevatorMovingStatus == 'idle')
                 bestFloorGap = currentFloorGap
-                bestElevator = elevatorsList[i]
+                bestElevator = current_elevator
             end
         end
         bestElevator.floorRequestList.push(_requestedFloor)
